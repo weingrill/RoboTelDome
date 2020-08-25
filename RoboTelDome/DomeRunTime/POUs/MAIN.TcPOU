@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="MAIN" Id="{7c90e337-da70-41ec-ab5c-8c28e27e5b13}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	OpenFlap,
+	CloseFlap,
+	OpenSlit,
+	CloseSlit: BOOL;
+	FlapDelay,
+	SlitDelay:	TON;
+	FlapTimer,
+	SlitTimer:	TP;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF CloseFlap THEN
+	OpenFlap := FALSE;
+	GVL_Dome.Flap_open := FALSE;
+END_IF
+IF OpenFlap THEN
+	GVL_Dome.Flap_open := TRUE;
+END_IF
+IF CloseSlit THEN
+	OpenSlit := FALSE;
+	GVL_Dome.Slit_open := FALSE;
+END_IF
+
+IF OpenSlit THEN
+	GVL_Dome.Slit_open := TRUE;
+END_IF
+
+FlapDelay(  IN := OpenFlap OR CloseFlap,
+			PT := T#1000MS);
+			
+FlapTimer(  IN := FlapDelay.Q,
+			PT := T#30S,
+			Q => GVL_Dome.Flap_enable);
+
+			
+SlitDelay(  IN := OpenSlit OR CloseSlit, 
+			PT := T#1000MS); 
+
+SlitTimer(  IN := SlitDelay.Q,
+			PT := T#70S,
+			Q => GVL_Dome.Slit_enable); ]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="52" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

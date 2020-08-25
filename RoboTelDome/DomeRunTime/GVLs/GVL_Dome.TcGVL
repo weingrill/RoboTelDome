@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_Dome" Id="{86115280-b596-42d6-92cd-0d7bfc111d95}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Flap_enable		AT%Q*:	BOOL;
+
+	Flap_open		AT%Q*:	BOOL;
+
+	Slit_enable		AT%Q*:	BOOL;
+
+	slit_open		AT%Q*:	BOOL;
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
