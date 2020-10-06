@@ -11,6 +11,14 @@ VAR
 	SlitDelay:	TON;
 	FlapTimer,
 	SlitTimer:	TP;
+	FlapDone,
+	SlitDone: F_TRIG;
+	
+	Serial: MDP5001_600_C98F2494;
+	SerialLineControl: SerialLineControl;
+	SerialError: INT;
+	RxBuffer,
+	TxBuffer: ComBuffer;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -37,13 +45,36 @@ FlapTimer(  IN := FlapDelay.Q,
 			PT := T#30S,
 			Q => GVL_Dome.Flap_enable);
 
+FlapDone(CLK := GVL_Dome.Flap_enable);
+// deactivate open or close signal if enable becomes false;
+IF FlapDone.Q THEN
+	OpenFlap := FALSE;
+	CloseFlap := FALSE;
+END_IF
 			
 SlitDelay(  IN := OpenSlit OR CloseSlit, 
 			PT := T#1000MS); 
 
 SlitTimer(  IN := SlitDelay.Q,
 			PT := T#70S,
-			Q => GVL_Dome.Slit_enable); ]]></ST>
+			Q => GVL_Dome.Slit_enable); 
+			
+SlitDone(CLK := GVL_Dome.Slit_enable);
+
+IF SlitDone.Q THEN
+	OpenSLit := FALSE;
+	CloseSlit := FALSE;
+END_IF
+
+SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
+	pComIn := ADR(Serial.MDP5001_600_Input.MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_0),
+	pComOut := ADR(Serial.MDP5001_600_Output.MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_0),
+	ErrorID => SerialError,
+	TxBuffer := Txbuffer,
+	RxBuffer := RxBuffer
+	);
+	
+	]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2" Count="0" />
@@ -60,11 +91,28 @@ SlitTimer(  IN := SlitDelay.Q,
       <LineId Id="38" Count="2" />
       <LineId Id="49" Count="0" />
       <LineId Id="46" Count="2" />
+      <LineId Id="56" Count="0" />
       <LineId Id="50" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="59" Count="0" />
       <LineId Id="33" Count="2" />
       <LineId Id="51" Count="0" />
       <LineId Id="32" Count="0" />
       <LineId Id="52" Count="1" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="77" Count="2" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="75" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

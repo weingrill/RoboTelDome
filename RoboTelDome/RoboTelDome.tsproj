@@ -2,6 +2,376 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4023.119">
 	<DataTypes>
 		<DataType>
+			<Name GUID="{11C2A372-062E-C11E-B46F-E9DD0C96E574}">Status_79D05CE4</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Transmit_accepted</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Receive_request</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Init_accepted</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Buffer_full</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Parity_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Framing_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Overrun_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input_length</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{D1E6D3F6-3812-330C-0B43-AF09788CCA22}">MDP5001_600_I_C98F2494</Name>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Status</Name>
+				<Type GUID="{11C2A372-062E-C11E-B46F-E9DD0C96E574}">Status_79D05CE4</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_0</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>40</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>56</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_9</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_10</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_11</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>104</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_12</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>112</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_13</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>120</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_14</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_15</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>136</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_16</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>144</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_17</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_18</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_19</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>168</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_20</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>176</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_21</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>184</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{DD9BF680-DC5C-07CC-1F4A-98C2778A4DB7}">Ctrl_AF82EAB4</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Transmit_request</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Receive_accepted</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Init_request</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Send_continues</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output_length</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{D1E6D3F7-3812-330C-0B43-AF09788CCA22}">MDP5001_600_O_C98F2494</Name>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Ctrl</Name>
+				<Type GUID="{DD9BF680-DC5C-07CC-1F4A-98C2778A4DB7}">Ctrl_AF82EAB4</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_0</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>40</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>56</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_9</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_10</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_11</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>104</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_12</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>112</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_13</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>120</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_14</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_15</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>136</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_16</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>144</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_17</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_18</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_19</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>168</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_20</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>176</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_21</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>184</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
 			<BitSize>1</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
@@ -39,6 +409,13 @@
 				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
 					<Name>DomeRunTime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.Serial.MDP5001_600_Input</Name>
+							<Type GUID="{D1E6D3F6-3812-330C-0B43-AF09788CCA22}">MDP5001_600_I_C98F2494</Type>
+						</Var>
+					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
 						<Var>
@@ -56,6 +433,10 @@
 						<Var>
 							<Name>GVL_Dome.slit_open</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.Serial.MDP5001_600_Output</Name>
+							<Type GUID="{D1E6D3F7-3812-330C-0B43-AF09788CCA22}">MDP5001_600_O_C98F2494</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -95,7 +476,7 @@
 					<Box Id="2" BoxType="9103" BoxFlags="#x00000020">
 						<Name>Klemme 2 (EL6021)</Name>
 						<ImageId>1001</ImageId>
-						<EtherCAT SlaveType="7" PdiType="#x0005" MboxDataLinkLayer="true" CycleMBoxPolling="true" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x17853052" RevisionNo="#x00140000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6021 Schnittstelle (RS422/485)" Desc="EL6021" PortABoxInfo="#x01000001">
+						<EtherCAT SlaveType="7" PdiType="#x0005" MboxDataLinkLayer="true" CycleMBoxPolling="true" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x17853052" RevisionNo="#x00140000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" CreateDeviceDataType="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6021 Schnittstelle (RS422/485)" Desc="EL6021" PortABoxInfo="#x01000001">
 							<SyncMan>0018f6002600010001000000f600f600f600001826010000</SyncMan>
 							<SyncMan>f618f6002200010002000000f600f600f600f61822010000</SyncMan>
 							<SyncMan>001018002400010003000000000000001800001024010000</SyncMan>
@@ -995,6 +1376,7 @@
 		</Io>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^DomeRunTime^DomeRunTime Instance">
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_Dome.Flap_enable" VarB="Channel 1^Output"/>
