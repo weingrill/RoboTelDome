@@ -406,7 +406,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{F0B49880-0AC9-48B7-87BD-A8D9634AF32E}" Name="DomeRunTime" PrjFilePath="DomeRunTime\DomeRunTime.plcproj" TmcFilePath="DomeRunTime\DomeRunTime.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="DomeRunTime\DomeRunTime.tmc">
 					<Name>DomeRunTime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -1372,6 +1372,68 @@
 					</Box>
 				</Box>
 				<EtherCAT/>
+			</Device>
+			<Device Id="1" DevType="112" AmsPort="28673" AmsNetId="5.73.45.158.2.1" RemoteName="Gerät 1 (EtherCAT Automation Protocol)">
+				<Name>Gerät 1 (EtherCAT Automation Protocol)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc></DeviceDesc>
+						<DeviceName></DeviceName>
+						<DeviceData>000000000000</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Image Id="3" AddrType="1" ImageType="3">
+					<Name>Prozessabbild</Name>
+				</Image>
+				<Box Id="6" BoxType="9051">
+					<Name>Box 6 (Publisher)</Name>
+					<ImageId>99</ImageId>
+					<Vars VarGrpType="1">
+						<Name>Eingänge</Name>
+						<Var BoxStateVariable="true">
+							<Name>FrameState</Name>
+							<Comment><![CDATA[0x0001 = Not sent (frame skipped)
+0x0002 = Error (frame oversized)
+0x0004 = Subscriber missing (Unicast only)
+]]></Comment>
+							<Type>UINT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>Ausgänge</Name>
+						<Var BoxStateVariable="true">
+							<Name>FrameCtrl</Name>
+							<Comment><![CDATA[0x0001 = Disable sending
+0x0002 = Remove destination MAC from ARP cache
+]]></Comment>
+							<Type>UINT</Type>
+						</Var>
+					</Vars>
+					<Eap InOut="1" Mac="010105040000" ArpRetryInterval="1000"/>
+				</Box>
+				<Box Id="7" BoxType="9052">
+					<Name>Box 7 (Subscriber)</Name>
+					<ImageId>100</ImageId>
+					<Vars VarGrpType="1">
+						<Name>Eingänge</Name>
+						<Var BoxStateVariable="true">
+							<Name>FrameState</Name>
+							<Type>UINT</Type>
+							<BitOffs>16</BitOffs>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>Ausgänge</Name>
+						<Var BoxStateVariable="true">
+							<Name>FrameCtrl</Name>
+							<Type>UINT</Type>
+							<BitOffs>16</BitOffs>
+						</Var>
+					</Vars>
+					<Eap Mac="010105040000"/>
+				</Box>
+				<Ethernet/>
+				<Eap EapDeviceGuid="{69852DA1-2E81-49E2-A4B3-BFB6124C2459}"/>
 			</Device>
 		</Io>
 	</Project>
