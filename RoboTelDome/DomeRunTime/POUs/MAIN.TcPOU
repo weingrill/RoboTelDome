@@ -13,16 +13,31 @@ VAR
 	SlitTimer:	TP;
 	FlapDone,
 	SlitDone: F_TRIG;
-	
+	TimeOut: TON;
+	(*
 	Serial: MDP5001_600_C98F2494;
 	SerialLineControl: SerialLineControl;
 	SerialError: INT;
 	RxBuffer,
 	TxBuffer: ComBuffer;
+	*)
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF CloseFlap THEN
+      <ST><![CDATA[IF GVL_Dome.ControlWord.0 THEN // we have valid data
+	OpenFlap := GVL_Dome.ControlWord.1;
+	OpenSlit := GVL_Dome.ControlWord.1;
+	CloseFlap := GVL_Dome.ControlWord.2;
+	CloseSlit := GVL_Dome.ControlWord.2;
+END_IF
+
+TimeOut(IN := NOT GVL_Dome.ControlWord.0, PT := T#30S);
+IF TimeOut.Q THEN
+	CloseFlap := TRUE;
+	CloseSlit := TRUE;
+END_IF
+
+IF CloseFlap THEN
 	OpenFlap := FALSE;
 	GVL_Dome.Flap_open := FALSE;
 END_IF
@@ -65,7 +80,7 @@ IF SlitDone.Q THEN
 	OpenSLit := FALSE;
 	CloseSlit := FALSE;
 END_IF
-
+(*
 SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
 	pComIn := ADR(Serial.MDP5001_600_Input.MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_0),
 	pComOut := ADR(Serial.MDP5001_600_Output.MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_0),
@@ -73,10 +88,20 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
 	TxBuffer := Txbuffer,
 	RxBuffer := RxBuffer
 	);
-	
+*)	
 	]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="112" Count="2" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="120" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="12" Count="0" />

@@ -10,6 +10,13 @@ VAR_GLOBAL
 	Slit_enable		AT%Q*:	BOOL;
 
 	slit_open		AT%Q*:	BOOL;
+	
+	OpenFlap		AT%I*: BOOL;
+	CloseFlap		AT%I*: BOOL;
+	OpenSlit		AT%I*: BOOL;
+	CloseSlit		AT%I*: BOOL;
+
+	ControlWord		AT%MW0: WORD;
 
 END_VAR]]></Declaration>
   </GVL>
