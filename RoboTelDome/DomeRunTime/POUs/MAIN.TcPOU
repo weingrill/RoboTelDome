@@ -77,17 +77,6 @@ IF FlapOpen AND OpenFlap THEN
 	OpenFlap := FALSE;
 END_IF
 
-IF CloseFlap THEN
-	OpenFlap := FALSE;
-	GVL_Dome.Flap_open := FALSE;
-	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_FLASHING_200ms;
-END_IF
-
-IF OpenFlap THEN
-	GVL_Dome.Flap_open := TRUE;
-	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_200ms;
-END_IF
-
 IF CloseSlit THEN
 	OpenSlit := FALSE;
 	GVL_Dome.Slit_open := FALSE;
@@ -97,6 +86,17 @@ END_IF
 IF OpenSlit THEN
 	GVL_Dome.Slit_open := TRUE;
 	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_500ms;
+END_IF
+
+IF CloseFlap THEN
+	OpenFlap := FALSE;
+	GVL_Dome.Flap_open := FALSE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_FLASHING_200ms;
+END_IF
+
+IF OpenFlap THEN
+	GVL_Dome.Flap_open := TRUE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_200ms;
 END_IF
 
 // if we reverse the direction of the flap, wait n milliseconds, otherwise we blow the fuse
@@ -112,11 +112,11 @@ FlapDone(CLK := GVL_Dome.Flap_enable);
 IF FlapDone.Q THEN
 	IF OpenFlap THEN
 		FlapOpen := TRUE;
-		OpenFlap := FALSE;
 	ELSIF CloseFlap THEN
 		FlapClosed := TRUE;
-		CloseFlap := FALSE;
 	END_IF
+	OpenFlap := FALSE;
+	CloseFlap := FALSE;
 END_IF
 			
 // if we reverse the direction of the flap, wait n milliseconds, otherwise we blow the fuse
@@ -133,11 +133,11 @@ SlitDone(CLK := GVL_Dome.Slit_enable);
 IF SlitDone.Q THEN
 	IF OpenSlit THEN
 		SlitOpen := TRUE;
-		OpenSlit := FALSE;
 	ELSIF CloseSlit THEN
 		SlitClosed := TRUE;
-		CloseSlit := FALSE;
 	END_IF
+	OpenSlit := FALSE;
+	CloseSlit := FALSE;
 END_IF
 
 IF DomeOpen THEN
@@ -147,10 +147,11 @@ IF DomeClosed THEN
 	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_ON;
 END_IF
 
-F_CX8190_LED_WD(eMode := WD_LED);
-
 DomeOpen := FlapOpen AND SlitOpen;
 DomeClosed := FlapClosed AND SlitClosed;
+
+F_CX8190_LED_WD(eMode := WD_LED);
+F_CX8190_LED_ERR(eMode := ERR_LED);
 
 // reset the controlword
 GVL_Dome.ControlWord.0 := 0;
@@ -196,16 +197,6 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="253" Count="2" />
       <LineId Id="251" Count="0" />
       <LineId Id="270" Count="4" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="244" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="14" Count="0" />
       <LineId Id="175" Count="0" />
       <LineId Id="20" Count="2" />
       <LineId Id="242" Count="0" />
@@ -214,6 +205,7 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="25" Count="1" />
       <LineId Id="243" Count="0" />
       <LineId Id="24" Count="0" />
+      <LineId Id="292" Count="10" />
       <LineId Id="167" Count="0" />
       <LineId Id="38" Count="2" />
       <LineId Id="49" Count="0" />
@@ -222,12 +214,9 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="50" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="57" Count="0" />
-      <LineId Id="277" Count="1" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="279" Count="0" />
-      <LineId Id="281" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="282" Count="0" />
+      <LineId Id="277" Count="2" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="285" Count="1" />
       <LineId Id="59" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="168" Count="0" />
@@ -241,17 +230,18 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="69" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="148" Count="1" />
-      <LineId Id="151" Count="0" />
       <LineId Id="169" Count="1" />
-      <LineId Id="172" Count="0" />
       <LineId Id="150" Count="0" />
+      <LineId Id="283" Count="1" />
       <LineId Id="67" Count="0" />
       <LineId Id="225" Count="0" />
       <LineId Id="212" Count="0" />
       <LineId Id="216" Count="4" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="288" Count="1" />
       <LineId Id="211" Count="0" />
       <LineId Id="204" Count="0" />
-      <LineId Id="164" Count="2" />
+      <LineId Id="291" Count="0" />
       <LineId Id="262" Count="0" />
       <LineId Id="256" Count="0" />
       <LineId Id="145" Count="0" />
