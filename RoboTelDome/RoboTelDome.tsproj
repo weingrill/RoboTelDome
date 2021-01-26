@@ -43,18 +43,22 @@
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>GVL_Dome.OpenFlap</Name>
+							<Comment><![CDATA[ open the flap (remote RT)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.CloseFlap</Name>
+							<Comment><![CDATA[ close the flap (remote RT)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.OpenSlit</Name>
+							<Comment><![CDATA[ open the slit (remote RT)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.CloseSlit</Name>
+							<Comment><![CDATA[ close the slit (remote RT)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -62,18 +66,22 @@
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>GVL_Dome.Flap_enable</Name>
+							<Comment><![CDATA[ enable flap hydraulics]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Flap_open</Name>
+							<Comment><![CDATA[ open the flap, when true; close when false]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Slit_enable</Name>
+							<Comment><![CDATA[ enable the slit motor]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.slit_open</Name>
+							<Comment><![CDATA[ open the slit when true; close when false]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
