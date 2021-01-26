@@ -1,19 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="MAIN" Id="{7c90e337-da70-41ec-ab5c-8c28e27e5b13}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	OpenFlap,
-	CloseFlap,
-	OpenSlit,
-	CloseSlit: BOOL;
+	OpenFlap:	BOOL;
+	CloseFlap:	BOOL;
+	OpenSlit:	BOOL;
+	CloseSlit:	BOOL;
+	FlapOpen:	BOOL := FALSE;
+	FlapClosed:	BOOL := FALSE;
+	SlitOpen:	BOOL := FALSE;
+	SlitClosed:	BOOL := FALSE;
+	// assume dome open, after power loss / reboot
+	DomeOpen:	BOOL := TRUE;
+	DomeClosed:	BOOL := FALSE;
 	FlapDelay,
 	SlitDelay:	TON;
 	FlapTimer,
 	SlitTimer:	TP;
 	FlapDone,
-	SlitDone: F_TRIG;
-	TimeOut: TON;
+	SlitDone:	F_TRIG;
+	SyncOut:	TON;
+	TimeOut:	TON;
+	WD_LED:		E_CX81x0_LED;
+	ERR_LED:	E_CX81x0_LED;
 	(*
 	Serial: MDP5001_600_C98F2494;
 	SerialLineControl: SerialLineControl;
@@ -24,62 +34,129 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_Dome.ControlWord.0 THEN // we have valid data
+      <ST><![CDATA[(*
+Dome Control Remote Unit CX8190
+########################
+
+The dome is controlled by the main PLC using the GVL_Dome.ControlWord,
+which is used to exchange commands to open and close the slit and the flap
+and to report wether the dome is open or closed.
+*)
+IF GVL_Dome.ControlWord.0 THEN // we have valid data
 	OpenFlap := GVL_Dome.ControlWord.1;
-	OpenSlit := GVL_Dome.ControlWord.1;
-	CloseFlap := GVL_Dome.ControlWord.2;
-	CloseSlit := GVL_Dome.ControlWord.2;
+	OpenSlit := GVL_Dome.ControlWord.2;
+	CloseFlap := NOT GVL_Dome.ControlWord.1;
+	CloseSlit := NOT GVL_Dome.ControlWord.2;
+	ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_OFF;
 END_IF
 
+// This is the sync timeout. If we loose the sync for 5 seconds, we issue a warning.
+SyncOut(IN := NOT GVL_Dome.ControlWord.0, PT := T#5S);
+IF SyncOut.Q THEN
+	ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_200ms;
+END_IF
+// This is the watchdog timer. If we don't get a valid signal within n seconds, we issue to close the dome.
 TimeOut(IN := NOT GVL_Dome.ControlWord.0, PT := T#30S);
 IF TimeOut.Q THEN
 	CloseFlap := TRUE;
 	CloseSlit := TRUE;
+	ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_ON;
+END_IF
+
+// cancel commands, if we know that the slot is closed
+IF SlitClosed AND CloseSlit THEN
+	CloseSlit := FALSE;
+END_IF
+IF SlitOpen AND OpenSlit THEN
+	OpenSlit := FALSE;
+END_IF
+IF FlapClosed AND CloseFlap THEN
+	CloseFlap := FALSE;
+END_IF
+IF FlapOpen AND OpenFlap THEN
+	OpenFlap := FALSE;
 END_IF
 
 IF CloseFlap THEN
 	OpenFlap := FALSE;
 	GVL_Dome.Flap_open := FALSE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_FLASHING_200ms;
 END_IF
+
 IF OpenFlap THEN
 	GVL_Dome.Flap_open := TRUE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_200ms;
 END_IF
+
 IF CloseSlit THEN
 	OpenSlit := FALSE;
 	GVL_Dome.Slit_open := FALSE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_FLASHING_500ms;
 END_IF
 
 IF OpenSlit THEN
 	GVL_Dome.Slit_open := TRUE;
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_500ms;
 END_IF
 
+// if we reverse the direction of the flap, wait n milliseconds, otherwise we blow the fuse
 FlapDelay(  IN := OpenFlap OR CloseFlap,
 			PT := T#1000MS);
-			
+// After an initial delay, enable the signal for n seconds to move the flap.			
 FlapTimer(  IN := FlapDelay.Q,
 			PT := T#30S,
 			Q => GVL_Dome.Flap_enable);
-
+// a falling edge of the enable signal indicates, that we are done
 FlapDone(CLK := GVL_Dome.Flap_enable);
 // deactivate open or close signal if enable becomes false;
 IF FlapDone.Q THEN
-	OpenFlap := FALSE;
-	CloseFlap := FALSE;
+	IF OpenFlap THEN
+		FlapOpen := TRUE;
+		OpenFlap := FALSE;
+	ELSIF CloseFlap THEN
+		FlapClosed := TRUE;
+		CloseFlap := FALSE;
+	END_IF
 END_IF
 			
+// if we reverse the direction of the flap, wait n milliseconds, otherwise we blow the fuse
 SlitDelay(  IN := OpenSlit OR CloseSlit, 
 			PT := T#1000MS); 
 
+// After an initial delay, enable the signal for n seconds to move the slit.			
 SlitTimer(  IN := SlitDelay.Q,
 			PT := T#70S,
 			Q => GVL_Dome.Slit_enable); 
-			
+// a falling edge of the enable signal indicates, that we are done			
 SlitDone(CLK := GVL_Dome.Slit_enable);
 
 IF SlitDone.Q THEN
-	OpenSLit := FALSE;
-	CloseSlit := FALSE;
+	IF OpenSlit THEN
+		SlitOpen := TRUE;
+		OpenSlit := FALSE;
+	ELSIF CloseSlit THEN
+		SlitClosed := TRUE;
+		CloseSlit := FALSE;
+	END_IF
 END_IF
+
+IF DomeOpen THEN
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_RED_ON;
+END_IF
+IF DomeClosed THEN
+	WD_LED := E_CX81x0_LED.eCX81x0_LED_GREEN_ON;
+END_IF
+
+F_CX8190_LED_WD(eMode := WD_LED);
+
+DomeOpen := FlapOpen AND SlitOpen;
+DomeClosed := FlapClosed AND SlitClosed;
+
+// reset the controlword
+GVL_Dome.ControlWord.0 := 0;
+GVL_Dome.ControlWord.3 := DomeOpen;
+GVL_Dome.ControlWord.4 := DomeClosed;
+
 (*
 SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
 	pComIn := ADR(Serial.MDP5001_600_Input.MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_0),
@@ -92,45 +169,95 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
 	]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="156" Count="0" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="157" Count="0" />
       <LineId Id="107" Count="0" />
       <LineId Id="109" Count="0" />
       <LineId Id="112" Count="2" />
+      <LineId Id="229" Count="0" />
       <LineId Id="111" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="264" Count="1" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="267" Count="0" />
       <LineId Id="115" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="117" Count="0" />
       <LineId Id="119" Count="0" />
+      <LineId Id="230" Count="0" />
       <LineId Id="118" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="247" Count="3" />
+      <LineId Id="253" Count="2" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="270" Count="4" />
       <LineId Id="120" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="244" Count="0" />
       <LineId Id="11" Count="0" />
+      <LineId Id="174" Count="0" />
       <LineId Id="15" Count="1" />
+      <LineId Id="245" Count="0" />
       <LineId Id="14" Count="0" />
+      <LineId Id="175" Count="0" />
       <LineId Id="20" Count="2" />
+      <LineId Id="242" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="25" Count="1" />
+      <LineId Id="243" Count="0" />
       <LineId Id="24" Count="0" />
+      <LineId Id="167" Count="0" />
       <LineId Id="38" Count="2" />
       <LineId Id="49" Count="0" />
       <LineId Id="46" Count="2" />
       <LineId Id="56" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="62" Count="0" />
-      <LineId Id="57" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="281" Count="0" />
       <LineId Id="60" Count="0" />
+      <LineId Id="282" Count="0" />
       <LineId Id="59" Count="0" />
-      <LineId Id="33" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="34" Count="1" />
       <LineId Id="51" Count="0" />
+      <LineId Id="275" Count="0" />
       <LineId Id="32" Count="0" />
       <LineId Id="52" Count="1" />
-      <LineId Id="63" Count="1" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="64" Count="0" />
       <LineId Id="69" Count="0" />
-      <LineId Id="65" Count="1" />
-      <LineId Id="68" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="150" Count="0" />
       <LineId Id="67" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="216" Count="4" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="164" Count="2" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="146" Count="0" />
       <LineId Id="73" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="77" Count="2" />
