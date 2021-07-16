@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="MAIN" Id="{7c90e337-da70-41ec-ab5c-8c28e27e5b13}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -55,6 +55,7 @@ SyncOut(IN := NOT GVL_Dome.ControlWord.0, PT := T#5S);
 IF SyncOut.Q THEN
 	ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_FLASHING_200ms;
 END_IF
+
 // This is the watchdog timer. If we don't get a valid signal within n seconds, we issue to close the dome.
 TimeOut(IN := NOT GVL_Dome.ControlWord.0, PT := T#30S);
 IF TimeOut.Q THEN
@@ -111,9 +112,11 @@ FlapDone(CLK := GVL_Dome.Flap_enable);
 // deactivate open or close signal if enable becomes false;
 IF FlapDone.Q THEN
 	IF OpenFlap THEN
-		FlapOpen := TRUE;
+		FlapOpen 	:= TRUE;
+		FlapClosed 	:= FALSE;
 	ELSIF CloseFlap THEN
-		FlapClosed := TRUE;
+		FlapClosed 	:= TRUE;
+		FlapOpen 	:= FALSE;
 	END_IF
 	OpenFlap := FALSE;
 	CloseFlap := FALSE;
@@ -186,6 +189,7 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="264" Count="1" />
       <LineId Id="268" Count="0" />
       <LineId Id="267" Count="0" />
+      <LineId Id="340" Count="0" />
       <LineId Id="115" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="117" Count="0" />
@@ -214,8 +218,12 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="50" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="57" Count="0" />
-      <LineId Id="277" Count="2" />
-      <LineId Id="281" Count="1" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="282" Count="0" />
       <LineId Id="285" Count="1" />
       <LineId Id="59" Count="0" />
       <LineId Id="33" Count="0" />
