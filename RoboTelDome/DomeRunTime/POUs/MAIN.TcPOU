@@ -7,9 +7,11 @@ VAR
 	CloseFlap:	BOOL;
 	OpenSlit:	BOOL;
 	CloseSlit:	BOOL;
-	FlapOpen:	BOOL := FALSE;
+	// assume Flap Open after restart
+	FlapOpen:	BOOL := TRUE;
 	FlapClosed:	BOOL := FALSE;
-	SlitOpen:	BOOL := FALSE;
+	// assume Slit Open after restart
+	SlitOpen:	BOOL := TRUE;
 	SlitClosed:	BOOL := FALSE;
 	// assume dome open, after power loss / reboot
 	DomeOpen:	BOOL := TRUE;
@@ -24,13 +26,7 @@ VAR
 	TimeOut:	TON;
 	WD_LED:		E_CX81x0_LED;
 	ERR_LED:	E_CX81x0_LED;
-	(*
-	Serial: MDP5001_600_C98F2494;
-	SerialLineControl: SerialLineControl;
-	SerialError: INT;
-	RxBuffer,
-	TxBuffer: ComBuffer;
-	*)
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -136,8 +132,10 @@ SlitDone(CLK := GVL_Dome.Slit_enable);
 IF SlitDone.Q THEN
 	IF OpenSlit THEN
 		SlitOpen := TRUE;
+		SlitClosed := FALSE;
 	ELSIF CloseSlit THEN
 		SlitClosed := TRUE;
+		SlitOpen := FALSE;
 	END_IF
 	OpenSlit := FALSE;
 	CloseSlit := FALSE;
@@ -160,16 +158,6 @@ F_CX8190_LED_ERR(eMode := ERR_LED);
 GVL_Dome.ControlWord.0 := 0;
 GVL_Dome.ControlWord.3 := DomeOpen;
 GVL_Dome.ControlWord.4 := DomeClosed;
-
-(*
-SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
-	pComIn := ADR(Serial.MDP5001_600_Input.MDP5001_600_COM_TxPDO_Map_Inputs_Data_In_0),
-	pComOut := ADR(Serial.MDP5001_600_Output.MDP5001_600_COM_RxPDO_Map_Outputs_Data_Out_0),
-	ErrorID => SerialError,
-	TxBuffer := Txbuffer,
-	RxBuffer := RxBuffer
-	);
-*)	
 	]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -238,7 +226,9 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="69" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="148" Count="1" />
+      <LineId Id="373" Count="0" />
       <LineId Id="169" Count="1" />
+      <LineId Id="372" Count="0" />
       <LineId Id="150" Count="0" />
       <LineId Id="283" Count="1" />
       <LineId Id="67" Count="0" />
@@ -255,13 +245,6 @@ SerialLineControl(Mode := ComSerialLineMode_t.SERIALLINEMODE_EL6_22B,
       <LineId Id="145" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="147" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="77" Count="2" />
-      <LineId Id="83" Count="1" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="85" Count="0" />
       <LineId Id="75" Count="0" />
     </LineIds>
   </POU>
