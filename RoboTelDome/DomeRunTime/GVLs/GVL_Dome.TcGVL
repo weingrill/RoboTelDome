@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <GVL Name="GVL_Dome" Id="{86115280-b596-42d6-92cd-0d7bfc111d95}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -11,17 +11,11 @@ VAR_GLOBAL
 	Slit_enable		AT%Q*:	BOOL;
 	// open the slit when true; close when false
 	slit_open		AT%Q*:	BOOL;
-	// open the flap (remote RT)
-	OpenFlap		AT%I*: BOOL;
-	// close the flap (remote RT)
-	CloseFlap		AT%I*: BOOL;
-	// open the slit (remote RT)
-	OpenSlit		AT%I*: BOOL;
-	// close the slit (remote RT)
-	CloseSlit		AT%I*: BOOL;
-	// ADS remote control word
-	ControlWord		AT%MW0: WORD;
+	// Input signal 7 (0...7)
+	Input7		AT%I*: BOOL;
 
+	// ADS remote control word
+	StatusWord		AT%MW0: WORD;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="NewADSRoute" Id="{6f5727fa-0de0-4058-866e-8bd3ec85d908}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM NewADSRoute
+VAR
+	// route 
+	fbAddRoute  : FB_AddRouteEntry;
+    // enable execution on first occurence
+	bExecute    : BOOL := TRUE;
+	// busy flag
+    bBusy       : BOOL;
+	// error flag
+    bError      : BOOL;
+	// error ID
+    nErrID      : UDINT;
+	// route parameters
+    stRoute     : ST_AmsRouteEntry := ( sName := 'CX-4E6032',
+                                        sNetID := '5.78.96.50.1.1',
+                                        sAddress := '141.33.54.242',
+                                        eTransport := eRouteTransport_TCP_IP );
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbAddRoute(	bExecute := bExecute,
+			stRoute := stRoute,
+			bBusy => bBusy,
+			bError => bError,
+			nErrID => nErrID);
+// deactivate after first execution
+bExecute := FALSE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="NewADSRoute">
+      <LineId Id="15" Count="0" />
+      <LineId Id="19" Count="4" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
