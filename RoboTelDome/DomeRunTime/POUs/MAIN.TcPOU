@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MAIN" Id="{7c90e337-da70-41ec-ab5c-8c28e27e5b13}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -12,42 +12,42 @@ VAR
 	// close slit command
 	CloseSlit:	BOOL;
 	// flap open state
-	FlapOpen:	BOOL := TRUE; // assume Flap Open after restart
+	FlapOpen:	BOOL;
 	// flap closed state
-	FlapClosed:	BOOL := FALSE;
+	FlapClosed:	BOOL;
 	// slit open state
-	SlitOpen:	BOOL := TRUE; // assume Slit Open after restart
+	SlitOpen:	BOOL;
 	// slit closed state
-	SlitClosed:	BOOL := FALSE;
+	SlitClosed:	BOOL;
 	// assume dome open, after power loss / reboot
-	DomeOpen:	BOOL := FALSE;
+	DomeOpen:	BOOL;
 	// dome closed state
-	DomeClosed:	BOOL := FALSE;
+	DomeClosed:	BOOL;
 	// control word is valid
-	Valid:		BOOL;
+	Valid:			BOOL;
 	// timer to delay the flap
-	FlapDelay: TON;
+	FlapDelay: 		TON;
 	// timer to delay the slit on reverse of direction
-	SlitDelay:	TON;
+	SlitDelay:		TON;
 	FlapTimer,
-	SlitTimer:	TP := (PT := T#60S);
+	SlitTimer:		TP := (PT := T#60S);
 	FlapDone,
-	SlitDone:	F_TRIG;
-	SyncOut:	TON;
-	TimeOut:	TON;
-	WD_LED:		E_CX81x0_LED;
-	ERR_LED:	E_CX81x0_LED;
+	SlitDone:		F_TRIG;
+	SyncOut:		TON;
+	TimeOut:		TON;
+	WD_LED:			E_CX81x0_LED;
+	ERR_LED:		E_CX81x0_LED;
 	DomeOpenEvent:		FB_EventLog;
 	DomeClosedEvent:	FB_EventLog;
 	SyncEvent:		FB_Eventlog;
 	TimeoutEvent:	FB_Eventlog;
 	ADSErrorEvent:	FB_Eventlog;
-	ReadCycle:	TON := (PT:=T#100MS);
-	fbReadReq:	ADSREAD := ( NETID := '5.78.96.50.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
+	ReadCycle:		TON := (PT:=T#100MS);
+	fbReadReq:		ADSREAD := ( NETID := '5.78.96.50.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	ControlWord: 	WORD;
-	Busy:	BOOL;
-	ADSError:	BOOL;
-	ADSErrorID: UDINT;
+	Busy:			BOOL;
+	ADSError:		BOOL;
+	ADSErrorID: 	UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -67,7 +67,10 @@ IF ReadCycle.Q THEN
 				BUSY => Busy,
 				ERR =>	ADSError,
 				ERRID => ADSErrorID);
-	IF NOT Busy THEN
+	IF Busy THEN
+		// reset the read command
+		fbReadReq(READ := FALSE);
+	ELSE
 		fbReadReq(  IDXGRP := 16#4020, 
 					IDXOFFS := 0, 
 					LEN := SIZEOF(ControlWord), 
@@ -76,21 +79,20 @@ IF ReadCycle.Q THEN
 					BUSY => Busy,
 					ERR =>	ADSError,
 					ERRID => ADSErrorID);
-		ReadCycle(IN := FALSE);
-	ELSE
-		// reset the read command
-		fbReadReq(READ := FALSE);
+		ReadCycle(IN := FALSE);		
 	END_IF
-	IF NOT ADSError THEN // we have valid data
-		Valid := 	ControlWord.0;
-		OpenFlap := ControlWord.1;
-		OpenSlit := ControlWord.2;
-		CloseFlap := NOT ControlWord.1;
-		CloseSlit := NOT ControlWord.2;
-		ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_OFF;
-	ELSE
+	IF ADSError THEN
 		// reset the control word
 		ControlWord := 0;
+		Valid := FALSE;	
+	ELSE // we have valid data
+		Valid := 	ControlWord.0;
+		CloseFlap := ControlWord.1;
+		CloseSlit := ControlWord.2;
+		OpenFlap := ControlWord.3;
+		OpenSlit := ControlWord.4;
+		
+		ERR_LED := E_CX81x0_LED.eCX81x0_LED_RED_OFF;
 	END_IF
 	
 END_IF
@@ -260,16 +262,16 @@ ADSErrorEvent(
       <LineId Id="572" Count="3" />
       <LineId Id="571" Count="0" />
       <LineId Id="494" Count="0" />
-      <LineId Id="453" Count="3" />
-      <LineId Id="472" Count="0" />
-      <LineId Id="468" Count="2" />
-      <LineId Id="475" Count="0" />
-      <LineId Id="478" Count="1" />
-      <LineId Id="577" Count="0" />
+      <LineId Id="629" Count="1" />
+      <LineId Id="478" Count="0" />
+      <LineId Id="631" Count="8" />
       <LineId Id="476" Count="0" />
-      <LineId Id="499" Count="7" />
+      <LineId Id="499" Count="0" />
+      <LineId Id="640" Count="1" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="642" Count="5" />
       <LineId Id="509" Count="0" />
-      <LineId Id="522" Count="0" />
       <LineId Id="508" Count="0" />
       <LineId Id="507" Count="0" />
       <LineId Id="447" Count="0" />
